@@ -8,6 +8,7 @@
 ###
 import random
 import time
+import math
 
 class MergeSort:
     """
@@ -93,69 +94,120 @@ class BubbleSort:
 
         return list
 
+class HeapSort:
+
+
+
+
+    def heapSort(self,list):
+        """
+
+        :param endIndex:
+        :param list:
+        """
+
+        endIndex = len(list)-1
+        parentNode = (endIndex - 1)/2
+
+        while parentNode >= 0:
+            self.siftDown(parentNode,list,endIndex)
+            parentNode -= 1
+
+        self.swap(list,0,endIndex)
+        endIndex -= 1
+        while endIndex > 0:
+            self.siftDown(0,list,endIndex)
+
+            list[0],list[endIndex]=list[endIndex],list[0]
+            endIndex -= 1
+
+
+
+            #     print list
+        return list
+
+    def siftDown(self,node,list,endIndex):
+
+
+        while node <= (endIndex -1)/2:
+            child = 2 * node +1
+            if child+1 <= endIndex and list[child+1] > list[child]:
+                child+=1
+            if list[child] > list[node]:
+                list[child],list[node]=list[node],list[child]
+                node = child
+            else:
+                return
+
+       # return list
+
+
+
+    def swap(self,list,id1,id2):
+        list[id1],list[id2] = list[id2],list[id1]
+
+
+
+    #def sort(self):
 
 class QuickSort:
     """
-    Quicksort
+    Quicksort : "Need to study more"
     """
     def quickSort(self,list):
-        if len(list) <= 1:
+        return self.qs(list,len(list),0)
+
+    def qs(self,list,end,start):
+        i=start
+        k=end
+        if end - start >1:
+            mP = list[i]
+            while k > i:
+                while list[i] <= mP and i < end and k > i:
+                    i+=1
+                while list[k] >= mP and k >= start and k > i:
+                    k -=1
+                if k > i:
+                    self.swap(list,i,k)
+
+
+
+        else:
             return list
-#        if len(list) > 1:
-#            return self.quickSort(list)
-#
 
-        midPoint = len(list)/2
-        mP = list[midPoint]
-        sI=0
-        eI=len(list) -1
-
-        while sI < midPoint or midPoint < eI:
-            #print 'Here'
-            if list[sI] > mP > list[eI]:
-                temp = list[sI]
-                list[sI] = list[eI]
-                list[eI] = temp
-                sI +=1
-                eI -=1
-
-            elif list[sI] < mP > list[eI]:
-                sI += 1
-
-            elif list[sI] > mP < list[eI]:
-                eI -= 1
-
-            elif list[sI] < mP < list[eI]:
-                sI += 1
-                eI -= 1
-
-
-            print sI,eI
-
-        return list
-
+    def swap(self,list,i,k):
+        temp = list[k]
+        list[k] = list[i]
+        list[i]= temp
 
 
 
 
 if __name__ == '__main__':
-    a = [i for i in range(10)]
+
+    a = [i for i in range(100000)]
     random.shuffle(a)
     t1 = time.time()
     #print BubbleSort().bubbleSort(a)
     t2 = time.time()
-    print 'BubbleSort = ',(t2 - t1)
+    #print 'BubbleSort = ',(t2 - t1)
 
     random.shuffle(a)
     t1 =time.time()
-    #print MergeSort().split(a)
+    MergeSort().split(a)
     t2 = time.time()
     print 'MergeSort = ',(t2 - t1)
 
 
     random.shuffle(a)
-    print a
+    #print a
     t1 =time.time()
-    print QuickSort().quickSort(a)
+    #print QuickSort().quickSort(a)
     t2 = time.time()
-    print 'QuickSort = ',(t2 - t1)
+    #print 'QuickSort = ',(t2 - t1)
+
+    random.shuffle(a)
+    t1 =time.time()
+    HeapSort().heapSort(a)
+    t2 = time.time()
+    print 'HeapSort = ',(t2 - t1)
