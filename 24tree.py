@@ -2,7 +2,7 @@
 
 import logging
 
-logging.basicConfig(level=logging.WARN)
+logging.basicConfig(level=logging.DEBUG)
 class Node:
     """
     Represents a node in a 2-3-4 Tree
@@ -37,7 +37,6 @@ class Node:
             self.keys.append(key)
             if pointers:
                 self.pointers.extend(pointers)
-
         elif len(self.keys) >= 3:
             logging.warn('Since node is full %s cannot be inserted in %s' %(key,self))
             return False
@@ -45,6 +44,7 @@ class Node:
             flag = self.findPositionAndInsert(key,pointers)
         logging.debug('After inserting node = %s and pointers = %s' %(self,self.pointers))
         return flag
+
 
     def findPositionAndInsert(self,key,pointers=None):
         """
@@ -57,8 +57,7 @@ class Node:
         if pointers:
             self.pointers.insert(position,pointers[0])
             self.pointers.insert(position+1,pointers[1])
-            pointers[0].parent = self
-            pointers[1].parent = self
+            pointers[0].parent = pointers[1].parent =self
         return True
 
 
@@ -146,7 +145,6 @@ class Tree:
 
         #Node =[1,2,3]
         logging.debug('Splitting node %s' %node)
-
         #position=3
         position = node.findPosition(key)
 
@@ -154,11 +152,9 @@ class Tree:
         node.keys.insert(position,key)
 
         if indNode:
-
             node.pointers.insert(position,indNode.pointers[0])
             node.pointers.insert(position+1,indNode.pointers[1])
-            indNode.pointers[0].parent=node
-            indNode.pointers[1].parent=node
+            indNode.pointers[0].parent=indNode.pointers[1].parent=node
 
 
         newLeftNode = Node(elements=node.keys[:1],pointers=node.pointers[:2])
@@ -168,16 +164,11 @@ class Tree:
         for n in node.pointers[2:]:
             n.parent = newRightNode
 
-
-        #print newLeftNode
-        #print newRightNode
-        #   [2]
-        #[1]    [3,4]
-
         newNode = Node(elements=node.keys[1:2],pointers=[newLeftNode,newRightNode])
+
         logging.info('New node is %s with pointers as %s' %(newNode,newNode.pointers))
         newLeftNode.parent= newRightNode.parent =newNode
-        #newRightNode.parent=newNode
+
         if node.parent:
             self.merge(newNode,node.parent)
             node.parent.pointers.remove(node)
@@ -206,20 +197,24 @@ class Tree:
 
 
     def printNode(self,node):
-
-        count=0
-        for pointer in node.pointers:
-            if pointer.pointers:
-                self.printNode(pointer)
+        """
+        Print through inline traversal
+        """
+        children = node.pointers
+        keys = node.keys
+        for count in range(len(children)):
+            if children[count].pointers:
+                self.printNode(children[count])
             else:
-                if count >0:
-                    print node.keys[count-1]
-                print pointer.keys
+                for key in children[count].keys:
+                    print key
+            if not count == len(children)-1:
+                print keys[count]
 
-            count +=1
+
 if __name__ == '__main__':
     t = Tree()
-    for i in range(1,100000):
+    for i in range(1,1001):
         t.insert(i)
-
-    #t.printNode(t.root)
+    string=''
+    t.printNode(t.root)
