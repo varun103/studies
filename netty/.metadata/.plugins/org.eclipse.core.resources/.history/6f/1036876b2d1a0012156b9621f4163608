@@ -1,0 +1,13 @@
+package sample;
+
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
+import org.jboss.netty.channel.SimpleChannelHandler;
+
+public class TimeServerHandler extends SimpleChannelHandler {
+	
+	public void channelConnected(ChannelHandlerContext ctx , ChannelStateEvent e){
+		
+	}
+
+}
